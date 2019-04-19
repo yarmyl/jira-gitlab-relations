@@ -8,6 +8,9 @@ URL=http://127.0.0.1:8081
 USER=test
 PASS=qwerty12345
 
+[JIRA]
+ISSUE_TYPE=option
+
 [RELATIONS]
 TEST=root/test
 
