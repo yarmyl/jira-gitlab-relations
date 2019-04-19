@@ -1,0 +1,13 @@
+[SERVER]
+PORT=1111
+HOST=
+
+[GIT]
+METHOD=OATH
+URL=http://127.0.0.1:8081
+USER=test
+PASS=qwerty12345
+
+[RELATIONS]
+TEST=root/test
+
