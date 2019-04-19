@@ -18,7 +18,9 @@ jira-gitlab-runner.py [-h] [--conf [CONF]] [--review] [--test] [--webhook] [--pu
 * *--test* - test program;
 * *-h* - help;
 * *--webhook* - WebHook server;
+
 or
+
 * *--puller* - Puller service.
 
 ## Config
