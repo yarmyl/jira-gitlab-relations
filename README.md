@@ -1,6 +1,6 @@
-# jira-gitlab
+# jira-gitlab-relations
 
-Add Issue in Jira Project -> Add branch in Gitlab Project
+Add Issue in Jira Project <-> Add branch in Gitlab Project
 
 ## Install
 
