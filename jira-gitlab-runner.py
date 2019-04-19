@@ -33,23 +33,26 @@ def get_settings(config):
     return settings
 
 
-def parse_mess(mess, relations):
+def parse_mess(mess, relations, itype):
     proj, branch = ("", "")
     try:
         if mess['webhookEvent'] == 'jira:issue_created':
-            proj = mess['issue']['fields']['project']['name']
-            branch = mess['issue']['fields']['summary']
-            if not re.match(
-                r"[\wа-яА-Я\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\]\"\'\`\;\№]+$",
-                branch
-            ):
-                out("Wrong branch name")
-                proj, branch = ("", "")
-            if not relations.get(proj.lower()):
-                out("Haven't relation "+proj.lower())
-                proj, branch = ("", "")
+            if not mess['issue']['fields']['issuetype']['name'] == itype:
+                out("Wrong Issue Type")
             else:
-                proj = relations[proj.lower()]
+                proj = mess['issue']['fields']['project']['name']
+                branch = mess['issue']['fields']['summary']
+                if not re.match(
+                    r"[\wа-яА-Я\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$",
+                    branch
+                ):
+                    out("Wrong branch name")
+                    proj, branch = ("", "")
+                elif not relations.get(proj.lower()):
+                    out("Haven't relation "+proj.lower())
+                    proj, branch = ("", "")
+                else:
+                    proj = relations[proj.lower()]
         else:
             out("Wrong webhook event!")
     except:
@@ -61,7 +64,8 @@ def review(settings):
     err = ""
     if settings.get('SERVER') and \
             settings.get('GIT') and \
-            settings.get('RELATIONS'):
+            settings.get('RELATIONS') and \
+            settings.get('JIRA'):
         if settings['SERVER'].get('host'):
             host = settings['SERVER'].get('host')
         else:
@@ -81,17 +85,19 @@ def review(settings):
                     err = "Wrong git auth config!"
             else:
                 err = "Wrong method!"
+        if not settings['JIRA'].get('issue_type'):
+            err = "Wrong Jira config"
         rel = settings['RELATIONS']
     else:
         err = "Wrong config!"
     return (host, port, err, rel)
 
 
-def start_puller(host, port, git, test, rels):
+def start_puller(host, port, git, jira, test, rels):
     pass
 
 
-def start_server(host, port, git, test, rels):
+def start_server(host, port, git, jira, test, rels):
     Handler = web_server.Server
     try:
         gitapi = gitclass.Gitapi(git)
@@ -108,7 +114,7 @@ def start_server(host, port, git, test, rels):
                 mess = Handler(request, client_address, httpd).message
                 request.close()
                 if mess:
-                    arr = parse_mess(mess, rels)
+                    arr = parse_mess(mess, rels, jira['issue_type'])
                     if arr[1] and arr[0]:
                         out(gitapi.add_branch(input=arr))
             httpd.server_close()
@@ -133,7 +139,7 @@ def main():
     if err:
         raise SystemExit(err)
     if not namespace.review:
-        run(host, port, settings['GIT'], namespace.test, rel)
+        run(host, port, settings['GIT'], settings['JIRA'], namespace.test, rel)
     else:
         raise SystemExit("Good config!")
 

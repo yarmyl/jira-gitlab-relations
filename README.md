@@ -35,6 +35,10 @@ jira-gitlab-runner.py [-h] [--conf [CONF]] [--review] [--test] [--webhook] [--pu
 * **PASS** - password if **OATH** method;
 * **TOKEN** - private token if **TOKEN** method.
 
+### [JIRA]
+
+* **ISSUE_TYPE** - filter issue type.
+
 ### [RELATIONS]
 
 \<JIRA Project\>=\<Gitlab path\>
@@ -48,6 +52,8 @@ TEST=root/test
 1. In Jira add webhook https://developer.atlassian.com/server/jira/platform/webhooks/
 
 2. Add Jira project
+
+3. Add issue type named "option" in project
 
 ## [GitLab]
 
