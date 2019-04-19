@@ -12,7 +12,7 @@ COPY web_server.py /app/
 
 COPY requirements.txt /app/
 
-RUN apk add python3 libffi-dev python3-dev openssl-dev gcc build-base && \
+RUN apk add --no-cache python3 libffi-dev python3-dev openssl-dev build-base && \
     pip3 install --upgrade pip && \
     pip3 install -r /app/requirements.txt && \
     cd /app
