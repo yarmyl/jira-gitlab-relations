@@ -11,21 +11,20 @@ pip3 install -r /app/requirements.txt
 ## Usage:
 
 ```
-jira-gitlab-runner.py [-h] [--conf [CONF]] [--review] [--test] [--webhook] [--puller]
+jira-gitlab-runner.py [-h] [--conf [CONF]] [--review] [--test]
 ```
 * *--review* - review config;
 * *--conf* - config file;
 * *--test* - test program;
 * *-h* - help;
-* *--webhook* - WebHook server or
-* *--puller* - Puller service.
 
 ## Config
 
-### [SERVER]
+### [PROGRAM]
 
-* **HOST** - listen IP-address;
-* **PORT** - listen port;
+* **METHOD** - server or service;
+* **HOST** - listen server's IP-address;
+* **PORT** - listen server's port.
 
 ### [GIT]
 
@@ -37,6 +36,9 @@ jira-gitlab-runner.py [-h] [--conf [CONF]] [--review] [--test] [--webhook] [--pu
 
 ### [JIRA]
 
+* **URL** - jira api url;
+* **USER** - jira username;
+* **PASS** - jira password;
 * **ISSUE_TYPE** - filter issue type.
 
 ### [RELATIONS]
@@ -47,7 +49,7 @@ Example:
 
 TEST=root/test
 
-## [JIRA]
+## JIRA
 
 1. In Jira add webhook https://developer.atlassian.com/server/jira/platform/webhooks/
 
@@ -55,7 +57,7 @@ TEST=root/test
 
 3. Add issue type named "option" in project
 
-## [GitLab]
+## GitLab
 
 1. Add GitLab project
 

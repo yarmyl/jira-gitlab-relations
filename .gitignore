@@ -3,3 +3,4 @@ __pycache__
 *~
 *.conf
 .gitlab-ci.yml
+docker-compose.yml
