@@ -5,7 +5,7 @@ HOST=
 
 [GIT]
 METHOD=OATH
-URL=http://127.0.0.1:8081
+URL=http://127.0.0.1:8080
 USER=test
 PASS=qwerty12345
 

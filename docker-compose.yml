@@ -1,0 +1,21 @@
+version: '3'
+services:
+
+  gitlab:
+    image: "gitlab/gitlab-ce"
+    container_name: "gitlab"
+    ports:
+     - "8081:80"
+    restart: always
+
+  jira:
+    image: "cptactionhank/atlassian-jira-service-desk"
+    container_name: "jira"
+    ports:
+     - "8080:8080"
+    restart: always
+
+  jira-gitlab:
+    image: "jira-gitlab"
+    container_name: "jira-gitlab"
+    restart: always

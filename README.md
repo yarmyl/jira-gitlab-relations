@@ -57,6 +57,8 @@ TEST=root/test
 
 3. Add issue type named "option" in project
 
+4. Rule issue name '[\wа-яА-Я\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$'
+
 ## GitLab
 
 1. Add GitLab project
@@ -72,3 +74,13 @@ TEST=root/test
 ```
 ./jira-gitlab-runner.py
 ```
+
+## Docker 
+
+1. docker build -t jira-gitlab .
+
+2. docker-compose up -d jira
+
+3. docker-compose up -d gitlab
+
+4. docker-compose up -d jira-gitlab

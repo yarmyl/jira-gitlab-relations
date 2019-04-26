@@ -19,4 +19,4 @@ RUN apk add --no-cache python3 libffi-dev python3-dev openssl-dev build-base && 
 
 WORKDIR /app/
 
-CMD ./jira-gitlab-runner.py
+CMD ["jira-gitlab-runner.py"]

@@ -5,6 +5,7 @@ import http.server
 import argparse
 import configparser
 import re
+import time
 import web_server
 import gitclass
 import jiraclass
@@ -32,29 +33,35 @@ def get_settings(config):
     return settings
 
 
+def check_name(name):
+    if not re.match(
+        r"[\w\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$",
+        name
+    ):
+        return 1
+    return 0
+
+
 def parse_mess(mess, relations, itype):
     proj, branch, key, err = ("", "", "", "")
     try:
         if mess['webhookEvent'] == 'jira:issue_created':
             if not mess['issue']['fields']['issuetype']['name'] == itype:
-                return  ("", "", "", "Wrong Issue Type")
+                return ("", "", "", "Wrong Issue Type")
             else:
-                proj = mess['issue']['fields']['project']['name']
+                proj = mess['issue']['fields']['project']['key']
                 branch = mess['issue']['fields']['summary']
                 key = mess['issue']['key']
-                if not re.match(
-                    r"[\wа-яА-Я\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$",
-                    branch
-                ):
-                    return  ("", "", key, "Wrong branch name")
+                if check_name(branch):
+                    return ("", "", key, "Wrong branch name")
                 elif not relations.get(proj.lower()):
-                    return  ("", "", "", "Haven't relation "+proj.lower())
+                    return ("", "", "", "Haven't relation "+proj.lower())
                 else:
                     proj = relations[proj.lower()]
         else:
-            return  ("", "", "", "Wrong webhook event!")
+            return ("", "", "", "Wrong webhook event!")
     except:
-        return  ("", "", "", "Message parse error!")
+        return ("", "", "", "Message parse error!")
     return (proj, branch, key, err)
 
 
@@ -98,7 +105,40 @@ def review(settings):
 
 
 def start_puller(prog, git, jira, rels, test):
-    pass
+    keys = []
+    try:
+        gitapi = gitclass.Gitapi(git)
+    except:
+        raise SystemExit("Error git connection!")
+    try:
+        jirapi = jiraclass.Jirapi(jira)
+    except AttributeError:
+        raise SystemExit("Error jira connection!")
+    for rel in rels:
+        keys += [rel.upper()]
+        if not gitapi.check_proj(rels[rel]):
+            raise SystemExit("Bad relation, haven't project "+rel)
+        if not jirapi.check_proj(rel.upper()):
+            raise SystemExit("Bad relation, haven't project "+rel)
+    if not test:
+        while 1:
+            issues = jirapi.find_issues(keys)
+            if issues:
+                for i in issues:
+                    if check_name(i.fields.summary):
+                        jirapi.out("Wrong branch name", i.key)
+                    else:
+                        jirapi.out(
+                            gitapi.add_branch(
+                                input=[
+                                    rels[i.fields.project.key.lower()],
+                                    i.fields.summary
+                                ]
+                            ),
+                            i.key
+                        )
+            time.sleep(60)
+    raise SystemExit("Good test config!")
 
 
 def start_server(prog, git, jira, rels, test):
