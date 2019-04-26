@@ -57,7 +57,7 @@ TEST=root/test
 
 3. Add issue type named "option" in project
 
-4. Rule issue name '[\wа-яА-Я\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$'
+4. Rule issue name ```'[\w\-\.\,\+\=\/\!\&\@\#\$\%\(\)\{\}\"\'\`\;\№]+$'```
 
 ## GitLab
 
