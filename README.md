@@ -76,7 +76,7 @@ TEST=root/test
 ```
 
 ## Docker 
-
+```
 1. docker build -t jira-gitlab .
 
 2. docker-compose up -d jira
@@ -84,3 +84,4 @@ TEST=root/test
 3. docker-compose up -d gitlab
 
 4. docker-compose up -d jira-gitlab
+```
